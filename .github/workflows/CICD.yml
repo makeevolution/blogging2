@@ -3,7 +3,7 @@ name: CICD
 on:
   push:
     branches: 
-      - prod
+      - tryCI 
 
 jobs:
   run_tests:
