@@ -59,7 +59,7 @@ jobs:
         with:
           host: ${{ secrets.SSHHOST1 }}
           username: root
-          key: ${{ secrets.SSHKEY1 }}
+          key: ${{ secrets.SSHKEY1}}
           script: |
             # Move to directory where the docker-compose.yml is
             cd /home/aldo/
