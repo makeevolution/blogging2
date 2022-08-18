@@ -42,5 +42,11 @@ venvROG/
 # general
 tmp*
 .env-flasky
+.env-blogging
 .env-mysql
 .coveragerc
+notes/
+oldThings/
+scripts/
+testnew.sqlite
+data-dev.sqlite

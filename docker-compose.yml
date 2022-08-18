@@ -1,11 +1,11 @@
 version: '3' # Specify version of compose to be used
 services: # Each subkey creates a Docker container (i.e. service)
-  flasky: # Each subkey are put into docker build and docker run
+  blogging: # Each subkey are put into docker build and docker run
     build: . # Looks for a Dockerfile in the current dir and build that
     ports:
       - "8000:5000"
-    env_file: .env-flasky
-    links:
+    env_file: .env-blogging
+    links: # This links subkey ensures mysql will start first before the blogging app
       - mysql:mysql-server
     restart: always
     image: aldosebastian/blogging
@@ -17,6 +17,6 @@ services: # Each subkey creates a Docker container (i.e. service)
     ports:
       - "5423:3306"
     volumes:
-      - /home/aldo/bloggingDB/data:/var/lib/mysql
+      - /home/aldo/bloggingDB/data:/var/lib/mysql # Use persisted data in this volume. Make sure the server has this folder.
     container_name: blogging_service_db
-  # The links subkey ensures mysql will start first before flasky
+  

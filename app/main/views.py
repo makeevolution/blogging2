@@ -26,7 +26,7 @@ def index():
     else:
         query = Post.query
     pagination: "flask_sqlalchemy.Pagination" = query.order_by(Post.timestamp.desc()).paginate(
-        page, per_page=current_app.config["FLASKY_POSTS_PER_PAGE"],
+        page, per_page=current_app.config["BLOGGING_POSTS_PER_PAGE"],
         error_out = False
     )
     # all() is now replaced with paginate() method.
@@ -132,7 +132,7 @@ def post(id):
         return redirect(url_for('main.post', id = post.id))
     page = request.args.get('page', 1, type=int)
     pagination: "flask_sqlalchemy.Pagination" = post.comments.order_by(Comment.timestamp.desc()).paginate(
-        page, per_page=current_app.config["FLASKY_POSTS_PER_PAGE"],
+        page, per_page=current_app.config["BLOGGING_POSTS_PER_PAGE"],
         error_out = False
     ) 
     comments = pagination.items
@@ -213,7 +213,7 @@ def followers(username: str):
     followersAsFollowInstance = db.session.query(User).filter_by(username=username).first().followers
     page = request.args.get('page', 1, type=int)
     pagination: "flask_sqlalchemy.Pagination" = followersAsFollowInstance.paginate(
-        page, per_page=current_app.config["FLASKY_POSTS_PER_PAGE"],
+        page, per_page=current_app.config["BLOGGING_POSTS_PER_PAGE"],
         error_out = False
     )
     followersCurrentPage = pagination.items
@@ -241,7 +241,7 @@ def followings(username: str):
     followingsAsFollowInstance = db.session.query(User).filter_by(username=username).first().following
     page = request.args.get('page', 1, type=int)
     pagination: "flask_sqlalchemy.Pagination" = followingsAsFollowInstance.paginate(
-        page, per_page=current_app.config["FLASKY_POSTS_PER_PAGE"],
+        page, per_page=current_app.config["BLOGGING_POSTS_PER_PAGE"],
         error_out = False
     )
     followingsCurrentPage = pagination.items
@@ -266,7 +266,7 @@ def moderate():
     page = request.args.get('page', 1, type=int)
     pagination: "flask_sqlalchemy.Pagination" = db.session.query(Comment).\
                                                 order_by(Comment.timestamp.desc()).paginate(
-        page, per_page=current_app.config["FLASKY_POSTS_PER_PAGE"],
+        page, per_page=current_app.config["BLOGGING_POSTS_PER_PAGE"],
         error_out = False
     ) 
     comments = pagination.items

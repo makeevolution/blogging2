@@ -19,7 +19,7 @@ def new_post():
 def get_posts():
     page = request.args.get('page', 1, type = int)
     paginate = db.session.query(Post).paginate(
-        page, per_page = current_app.config["FLASKY_POSTS_PER_PAGE"],
+        page, per_page = current_app.config["BLOGGING_POSTS_PER_PAGE"],
         error_out = False
     )
     posts = paginate.items
@@ -44,7 +44,7 @@ def get_post_comments(id):
     page = request.args.get('page', 1, type = int)
     post = db.session.query(Post).get_or_404(id)
     paginate = post.commments.paginate(
-        page, per_page = current_app.config["FLASKY_POSTS_PER_PAGE"],
+        page, per_page = current_app.config["BLOGGING_POSTS_PER_PAGE"],
         error_out = False
     )
     posts = paginate.items

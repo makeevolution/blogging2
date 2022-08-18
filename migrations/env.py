@@ -14,9 +14,9 @@ except RuntimeError:
     # we cannot use the models directly without not creating a flask instance.
     # So need to create a Flask app instance to gain access to the models.
     # Push a new app_context so the current_app has an instance.
-    # Here need to import from flasky, since we below uses current_app.extensions['migrate]
-    # and migrate is only defined in flasky.
-    from flasky import app
+    # Here need to import from blogging, since we below uses current_app.extensions['migrate]
+    # and migrate is only defined in blogging.
+    from blogging import app
     app_context = app.app_context()
     app_context.push()
     

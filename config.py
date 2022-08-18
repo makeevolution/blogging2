@@ -10,11 +10,11 @@ class Config:
         ['true', 'on', '1']
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    FLASKY_MAIL_SUBJECT_PREFIX = '[Flasky]'
-    FLASKY_MAIL_SENDER = 'Flasky Admin <flasky@example.com>'
-    FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN') or "aldohasibuan1@gmail.com"
+    BLOGGING_MAIL_SUBJECT_PREFIX = '[Blogging]'
+    BLOGGING_MAIL_SENDER = 'Blogging Admin <blogging@example.com>'
+    BLOGGING_ADMIN = os.environ.get('BLOGGING_ADMIN') or "aldohasibuan1@gmail.com"
     SQLALCHEMY_TRACK_MODIFICATIONS = True 
-    FLASKY_POSTS_PER_PAGE = 5
+    BLOGGING_POSTS_PER_PAGE = 5
     NAMING_CONVENTION = {
     "ix": 'ix_%(column_0_label)s',
     "uq": "uq_%(table_name)s_%(column_0_name)s",
