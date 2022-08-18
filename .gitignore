@@ -43,3 +43,4 @@ venvROG/
 tmp*
 .env-flasky
 .env-mysql
+.coveragerc
