@@ -1,6 +1,6 @@
 Notes
 ======
-- To run, start virtual env, then ```$env:FLASK_APP = "flasky.py"``` and ```flask run```
+- To run, start virtual env, then ```$env:FLASK_APP = "blogging.py"``` and ```flask run```
 - add also ```$env:FLASK_ENV="development"```
 - This branch has a web form created using flask-wtf package
 - flask-wtf requires the app to have a secret key configured, to prevent against CSRF attacks
@@ -23,12 +23,12 @@ Notes
   name, we can flash a message telling them they changed their name. This is shown in hello.py.
 - The base.html now also includes code to render the flash message.
 
-- In this commit, ```hello.py``` is changed to ```flasky.py```, and the application is refactored and is much neater. Use gitk to see which files changed and comments on it
+- In this commit, ```hello.py``` is changed to ```blogging.py```, and the application is refactored and is much neater. Use gitk to see which files changed and comments on it
 
 - In this commit, a database migration framework is applied (Alembic). 
 - If we create a change to the models in models.py, using this we can update the database accordingly
-- First, add migrate = Migrate(app,db) to flasky.py (shown there). Don't forget to set the ```FLASK_APP``` env variable to ```flasky.py```
-- Since ```flasky.py``` uses a default configuration that works with the database ```data-dev.sqlite```, the migration will apply to that database
+- First, add migrate = Migrate(app,db) to blogging.py (shown there). Don't forget to set the ```FLASK_APP``` env variable to ```blogging.py```
+- Since ```blogging.py``` uses a default configuration that works with the database ```data-dev.sqlite```, the migration will apply to that database
 - To initialize the framework in the project, run ```flask db init``` (before doing any changes to models.py!)
 - Then apply changes to the model. For example, in this commit the attribute ```test``` is added to User, which means a new column ```test``` is to be added in the database
 - After adding this change, run ```flask db migrate``` to create a migration script

@@ -18,7 +18,7 @@ def get_user_posts(id):
     user = db.session.query(User).get_or_404(id)
     # paginate the posts since there's a lot of them
     paginate = user.posts.paginate(page,
-                                    per_page = current_app.config["FLASKY_POSTS_PER_PAGE"],
+                                    per_page = current_app.config["BLOGGING_POSTS_PER_PAGE"],
                                     error_out = False)
     posts = paginate.items
     next = None

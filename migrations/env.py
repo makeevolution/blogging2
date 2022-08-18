@@ -16,7 +16,7 @@ except RuntimeError:
     # Push a new app_context so the current_app has an instance.
     # Here need to import from flasky, since we below uses current_app.extensions['migrate]
     # and migrate is only defined in flasky.
-    from flasky import app
+    from blogging import app
     app_context = app.app_context()
     app_context.push()
     

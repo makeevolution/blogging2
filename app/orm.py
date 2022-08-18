@@ -16,7 +16,7 @@ def resetUserRoles():
     for user in getAllUsers():
         if user is None:
             continue
-        if user.email ==  current_app.get("FLASKY_ADMIN"):
+        if user.email ==  current_app.get("BLOGGING_ADMIN"):
             user.role = Role.query.filter_by(name="Administrator").first()
         else:
             user.role = Role.query.filter_by(default=True).first()
