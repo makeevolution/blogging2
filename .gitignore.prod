@@ -1,0 +1,11 @@
+.env-flasky
+.env-blogging
+.env-mysql
+.coveragerc
+notes/
+oldThings/
+scripts/
+testnew.sqlite
+data-dev.sqlite
+.env-blogging
+.env-mysql

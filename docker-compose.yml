@@ -16,7 +16,7 @@ services: # Each subkey creates a Docker container (i.e. service)
     restart: always
     ports:
       - "5423:3306"
-    volumes:
-      - /home/aldo/bloggingDB/data:/var/lib/mysql # Use persisted data in this volume. Make sure the server has this folder.
+    #volumes:
+    #  - /home/aldo/bloggingDB/data:/var/lib/mysql # Use persisted data in this volume. Make sure the server has this folder.
     container_name: blogging_service_db
   

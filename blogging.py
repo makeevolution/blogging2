@@ -43,7 +43,8 @@ from config import config
 # Create an instance of an application using a configuration in env var
 usedConfiguration = os.getenv('FLASK_CONFIG') or 'default'
 app = create_app(usedConfiguration)
-# Migrate the existing database, or create a new database if it doesn't exist
+# The below variable is used by '''flask db migrate''' command i.e. when you want to create a migration script
+# after updating the model. 
 migrate = Migrate(app, db, render_as_batch = True)
 
 # Nothing to do with the application, it's here just so that if we run flask shell from cmd, no imports for db, User and Role required
@@ -95,7 +96,6 @@ def createdatabase(**kwargs):
     from sqlalchemy import create_engine
     engine = app.extensions["migrate"].db.engine
     engineForNewDB = re.findall("(?<=\()(.*)(?=\\\)", engine.__repr__())[0] + "\\" + kwargs["dbname"] + ".sqlite"
-    print(engineForNewDB)
     engine = create_engine(engineForNewDB)
     from alembic.config import Config
     from alembic import command

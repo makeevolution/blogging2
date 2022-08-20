@@ -58,10 +58,11 @@ class DockerConfig(ProductionConfig):
         ProductionConfig.init_app(app)
 
         import logging
-        from logging import StreamHandler
+        from logging import FileHandler
         # Create handler that logs all logging to stderr.
         # Docker will expose all logging to stderr through docker logs command.
-        file_handler = StreamHandler()
+        file_handler = FileHandler("logs_prod.log", 'a', 'utf-16')
+        file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
         file_handler.setLevel(logging.INFO)
         app.logger.addHandler(file_handler)
 

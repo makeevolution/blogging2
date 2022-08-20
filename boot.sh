@@ -8,7 +8,6 @@ while true; do
     echo Deploy command failed, retrying in 5 secs...
     sleep 5
 done
-# --access-logfile and --error-logfile ensures all access and error logfiles
-# to be written to stdout, instead of the default which is to write to a log file
-# (defaulted by Docker)
-exec gunicorn -b :5000 --access-logfile - --error-logfile - blogging:app
+# --access-logfile -: write access logs to console
+# --error-logfile logs.log --capture-output: write print statements and errors in app to logs.log
+exec gunicorn -b :5000 --access-logfile - --error-logfile logs.log --capture-output blogging:app

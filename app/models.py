@@ -1,9 +1,6 @@
 # the import below imports db from __init__.py
 from datetime import datetime
 import hashlib
-import json
-from sqlite3 import Timestamp
-from xml.dom import ValidationErr
 import bleach
 from flask import current_app, url_for
 from itsdangerous import Serializer
@@ -40,7 +37,6 @@ class Follow(db.Model):
     following_id = db.Column(db.Integer, db.ForeignKey('users.id'),
                             primary_key=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-    trigger = db.Column(db.Text())
 
 # A comment belogns to one user, one user can have multiple comments (one to many)
 # A comment belongs to a post, one post can have multiple comments (one to many) 
@@ -94,7 +90,7 @@ class User(UserMixin, db.Model):
     posts: sqlalchemy.orm.Query = db.relationship('Post', backref = 'author', lazy = 'dynamic')
     # a db relationship to indicate one to many relationship i.e. one user can have
     # many posts, but one post can only belong to one person.
-    
+
     # The two attributes below ("following" and "followers") define the following and follower relationship between users.
     # A User can both be followed by multiple users (followers attribute below) and follow multiple users (following attribute below)
     # So it's a many to many relationship between followers and following.

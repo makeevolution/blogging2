@@ -1,7 +1,7 @@
 from flask import current_app
 from sqlalchemy import false
 from . import db
-from .models import Permission, User, Role
+from .models import User, Role
 
 class InvalidAttributeException(Exception):
     def __init__(self, message = "Attribute Invalid!"):
