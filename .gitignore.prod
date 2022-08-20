@@ -1,6 +1,4 @@
 .env-flasky
-.env-blogging
-.env-mysql
 .coveragerc
 notes/
 oldThings/
