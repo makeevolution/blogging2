@@ -53,8 +53,10 @@
     </div>
     <!-- Remember that posts and pagination data are already
          synchronized and processed in the route-->
-    {% include '_posts.html' %}
-    <div class="pagination">
+    {% with is_index_page="is_index_page" %}
+        {% include '_posts.html' %}
+     {% endwith %}    
+     <div class="pagination">
         {{ macros.pagination_widget(pagination, 'main.index') }}
     </div> 
 </div>

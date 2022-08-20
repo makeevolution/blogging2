@@ -41,7 +41,7 @@ div.post-body {
     min-height: 48px;
     position: relative;
 }
-div.post-body p::before {
+div.post-body.is_index_page::before {
   content:'';
   width:100%;
   height:100%;    
