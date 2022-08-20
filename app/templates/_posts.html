@@ -1,17 +1,30 @@
+<script src="static/scripts.js"></script>
 <ul class = "posts">
     {% for post in posts %}
     <li class = "post">
         <div class="profile-thumbnail">
-            <a href = "{{url_for('main.user', username = post.author.username) }}">
-                <img class="img-rounded profile-thumbnail"
-                     src = "{{post.author.gravatar(size=40)}}">
-            </a>
+            
         </div>
         <div class ="post-date">{{ moment(post.timestamp).fromNow() }}</div>
         <div class="post-author">
-            <a href = "{{url_for('main.user', username = post.author.username) }}">
-               {{ post.author.username }}
+            <a href = "{{url_for('main.user', username = post.author.username) }}" style="display: inline-block; width: 50px;">
+                <img class="img-rounded profile-thumbnail"
+                     src = "{{post.author.gravatar(size=40)}}">
             </a>
+            <a href = "{{url_for('main.user', username = post.author.username) }}">
+               <p style="/*! bold */font-weight: bold;">{{ post.author.username }}</p>
+            </a>
+            <div>
+                {% if (post.author == current_user) and (not current_user.can(Permission.ADMIN)) %}
+                    <a href="{{url_for('main.edit_post', id = post.id) }}">
+                        <span class="label label-primary">Edit</span>
+                    </a>
+                {% elif current_user.can(Permission.ADMIN) %}
+                    <a href="{{url_for('main.edit_post', id = post.id) }}">
+                        <span class="label label-danger">Edit [Admin]</span>
+                    </a>
+                {%endif%}
+            </div>
         </div>
         <!-- The following div renders the posts.-->
         <!-- The | safe skips the safety check by Jinja, since body_html is output of markdown that is already
@@ -20,26 +33,23 @@
              this check by Jinja is not needed.-->
         <!-- Otherwise, the post.body, which is in markdown, will be rendered automatically
              to HTML by Jinja, with its own safety checks.-->
+        <div class="post-title">
+            <a href = "{{url_for('main.post', id = post.id) }}" style="display: inline-block; width: 50px;">
+                <h3 style="font-weight: bold;">
+                {% if post.title_html %}
+                    {{ post.title_html | safe }}
+                {% else %}
+                    {{ post.title }}
+                {% endif %}
+                </h3>
+            </a>
+        </div>
         <div class="post-body">
             {% if post.body_html %}
                 {{ post.body_html | safe }}
             {% else %}
                 {{ post.body }}
             {% endif %}
-        </div>
-        <div>
-            <a href = "{{url_for('main.post', id = post.id) }}">
-                <span class="label label-default">Permalink</span> 
-            </a>
-            {% if (post.author == current_user) and (not current_user.can(Permission.ADMIN)) %}
-                <a href="{{url_for('main.edit_post', id = post.id) }}">
-                    <span class="label label-primary">Edit</span>
-                </a>
-            {% elif current_user.can(Permission.ADMIN) %}
-                <a href="{{url_for('main.edit_post', id = post.id) }}">
-                    <span class="label label-danger">Edit [Admin]</span>
-                </a>
-            {%endif%}
         </div>
     </li>
     {% endfor %}

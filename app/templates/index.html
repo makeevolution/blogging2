@@ -22,7 +22,12 @@
 
 <div>
     {% if current_user.can(Permission.WRITE) %}
-        {{wtf.quick_form(form)}}
+    <form class="form" action="" method="post" role="form">
+        {{ form.csrf_token }}
+        {{ wtf.form_field(form.title) }}
+        {{ wtf.form_field(form.text) }}
+        {{ form.submit(class="btn btn-info") }}
+    </form>
     {% endif %}
     <h1>Posts</h1>
     <div class="post-tabs">

@@ -346,11 +346,12 @@ class Role(db.Model):
 class Post(db.Model):
     __tablename__ = "posts"
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.Text)
+    title_html = db.Column(db.Text)
     body = db.Column(db.Text)
     body_html = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-
     comments: sqlalchemy.orm.Query = db.relationship('Comment',
                                 foreign_keys = [Comment.post_id],
                                 backref = db.backref('post', lazy = 'joined'),
@@ -370,11 +371,20 @@ class Post(db.Model):
     # The _posts.html will look if body_html is not empty (should be). If it isn't, then this will be rendered. Otherwise,
     # the raw markdown will be rendered by Jinja to html.
     @staticmethod
-    def on_changed_body(target, value, oldvalue, initiator):
+    def on_changed_body(target, value, old_value, initiator):
         allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
                         'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
                         'h1', 'h2', 'h3', 'p']
         target.body_html = bleach.linkify(bleach.clean(
+            markdown(value, output_format='html'),
+            tags=allowed_tags, strip=True))
+
+    @staticmethod
+    def on_changed_title(target, value, old_value, initiator):
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
+                        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
+                        'h1', 'h2', 'h3', 'p']
+        target.title_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
             tags=allowed_tags, strip=True))
 
@@ -399,3 +409,4 @@ class Post(db.Model):
 
 
 db.event.listen(Post.body, 'set', Post.on_changed_body)
+db.event.listen(Post.title, 'set', Post.on_changed_title)

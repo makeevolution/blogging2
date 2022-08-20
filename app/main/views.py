@@ -12,7 +12,7 @@ from ..decorators import admin_required, permission_required
 def index():
     form = PostForm()
     if current_user.can(Permission.WRITE) and form.validate_on_submit():
-        post = Post(body = form.text.data, author = current_user._get_current_object())
+        post = Post(title = form.title.data, body = form.text.data, author = current_user._get_current_object())
         db.session.add(post)
         db.session.commit()
         return redirect(url_for("main.index"))
@@ -152,10 +152,12 @@ def edit_post(id):
     if (post.author != current_user) and (not current_user.can(Permission.ADMIN)):
         abort(403)
     form = PostForm()
+    newTitle = form.title.data
     newText = form.text.data # Post to be edited is displayed first
     form.text.data = post.body
     if form.validate_on_submit():
         post.body = newText
+        post.title = newTitle
         db.session.add(post)
         db.session.commit()
         return redirect(url_for("main.post", id = post.id))
