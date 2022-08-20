@@ -1,5 +1,0 @@
-## notes on alembic, migrations and database
-
-- You need to make sure that the migration scripts reflect the current orm model before pushing to production!
-  Otherwise the database there will not be upgraded correctly to match what the current model is like!
-- Whether ```flask db migrate``` will generate a migration script is based on comparing the database it is connected to and the model, whether there are differences or not. It will not look at the currently available migration scripts. Therefore if the scripts are out of sync to either the model or the database, if a script is generated, it will not be consistent with existing ones and trying to upgrade will cause errors. Therefore make sure the scripts are in line with the model, as well as the database you want to upgrade! Especially if you have multiple databases (e.g. production and development like we have here)
