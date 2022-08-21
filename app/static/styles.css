@@ -1,3 +1,6 @@
+body{
+    background-color: #DAE0E6;
+}
 .profile-thumbnail {
     position: absolute;
 }
@@ -19,6 +22,9 @@ ul.posts li.post {
 ul.posts li.post:hover {
     background-color: #f0f0f0;
 }
+div.make-post-form{
+    margin-top:5px;
+}
 div.post-date {
     float: right;
 }
@@ -28,6 +34,10 @@ div.post-author {
     font-weight: bold;
     display: flex;
     flex-direction: row;
+}
+div.post-author > * {
+    margin-right: 10px;
+
 }
 div.post-thumbnail {
     position: absolute;
@@ -41,6 +51,10 @@ div.post-body {
     min-height: 48px;
     position: relative;
 }
+div.post-body.is_index_page {
+    max-height:100px;
+    overflow: hidden;
+}
 div.post-body.is_index_page::before {
   content:'';
   width:100%;
@@ -48,7 +62,7 @@ div.post-body.is_index_page::before {
   position:absolute;
   left:0;
   top:0;
-  background:linear-gradient(transparent 10px, white);
+  background:linear-gradient(transparent 50px, white);
 }
 ul.comments {
     list-style-type: none;

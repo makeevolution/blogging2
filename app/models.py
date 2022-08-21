@@ -386,7 +386,7 @@ class Post(db.Model):
                         'h1', 'h2', 'h3', 'p']
         target.title_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
-            tags=allowed_tags, strip=True))
+            tags=allowed_tags, strip=True)).capitalize()
 
     def create_comment(self, author: User, body: str):
         if body == "":

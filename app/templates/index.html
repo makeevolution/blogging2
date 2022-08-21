@@ -1,3 +1,5 @@
+
+
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf%}
 {% import "_macros.html" as macros %}
@@ -22,12 +24,20 @@
 
 <div>
     {% if current_user.can(Permission.WRITE) %}
-    <form class="form" action="" method="post" role="form">
-        {{ form.csrf_token }}
-        {{ wtf.form_field(form.title) }}
-        {{ wtf.form_field(form.text) }}
-        {{ form.submit(class="btn btn-info") }}
-    </form>
+    <!--Collapse uses Bootstrap-->
+    <input readOnly type="text" placeholder="Create Post" class="form-control show-post-form" data-toggle="collapse" data-target="#form"/>
+    <div class="make-post-form collapse" id="form" style="position:relative">
+        <form class="form" action="" method="post" role="form">
+            {{ form.csrf_token }}
+            {{ wtf.form_field(form.title) }}
+            {{ wtf.form_field(form.text) }}
+            <div style="display:flex">
+                {{ form.submit(class="btn btn-info") }}
+            </div>
+        </form>
+        <button class="btn btn-danger hide-post-form" style="position:absolute; margin-top:-34px; margin-left:90px"> Cancel </button>
+
+    </div>
     {% endif %}
     <h1>Posts</h1>
     <div class="post-tabs">
