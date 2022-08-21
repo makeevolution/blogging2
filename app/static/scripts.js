@@ -21,40 +21,38 @@
     });
     $(function () {
         $('.vote').click(function (event) {
-            var current_target = event.target;
-            if (current_target.classList.contains("vote-up")) {
-                var vote_down = event.currentTarget.querySelector(".vote-down");
-                var post_id = $(vote_down).attr("post-id")
-                if ($(vote_down).hasClass("on")) {
-                    $(vote_down).removeClass("on")
-                }
-                if (!$(vote_down).hasClass("on")) {
-                    $.ajax({
-                        url: '/vote',
-                        type: "PUT",
-                        contentType: "application/json",
-                        data: JSON.stringify({ "id": post_id, "iter": 1 }),
-                        event: event,
-                        success: function (result) {
-                            this.event.currentTarget.querySelector("div p").textContent = result["votes"]
-                            console.log(result);
-                        },
-                        error: function (result) {
-                            alert("Vote cast failed! Something went wrong")
-                        }
+            var current_target_most_specific = event.target; // Targets the path tags directly.
+            if (current_target_most_specific.classList.contains("vote-up")){
+                var other_vote = "vote-down";
+                var iter = 1;
+            }
+            else if (current_target_most_specific.classList.contains("vote-down")){
+                var other_vote = "vote-up";
+                var iter = -1;
+            }
+            else {
+                return
+            }
+            var otherVote = event.currentTarget.querySelector("."+other_vote); //event.currentTarget returns the span class="vote"
+            var post_id = $(otherVote).attr("post-id"); // Can take id from other vote since the clicked and the opposing vote refers to the same post!
+            
+            if ($(otherVote).hasClass("on")) {
+                $(otherVote).removeClass("on")
+            }
+            $.ajax({
+                    url: '/vote',
+                    type: "PUT",
+                    contentType: "application/json",
+                    data: JSON.stringify({ "id": post_id, "iter": iter }),
+                    event: event,
+                    success: function (result) {
+                        this.event.currentTarget.querySelector("div p").textContent = result["votes"] //event.currentTarget returns the span class="vote"
+                    },
+                    error: function (result) {
+                        alert("Vote cast failed! Something went wrong")
                     }
-                    )
-                }
-                current_target.classList.toggle("on");
-            }
-            if (event.target.classList.contains("vote-down")) {
-                var vote_up = event.currentTarget.querySelector(".vote-up");
-                if ($(vote_up).hasClass("on")) {
-                    $(vote_up).removeClass("on")
-                }
-                // add logic to upvote downvote
-                event.target.classList.toggle("on");
-            }
+                });
+                current_target_most_specific.classList.add("on");
         });
-    })
+        });
 })(jQuery);
