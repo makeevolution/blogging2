@@ -2,11 +2,14 @@
     {% for post in posts %}
     <li class = "post">
             <span class="vote">
-                <svg width="36" height="36">
-                  <path class="vote-up" d="M 0 18 h 36 l -18 -15z" fill="currentColor"></path>
+                <svg>
+                  <path class="vote-up" d="M 0 18 h 36 l -18 -15z" fill="currentColor" post-id="{{post.id}}"></path>
                 </svg>
-                <svg width="36" height="36">
-                  <path class="vote-down" d="M 0 0 h 36 L 18 15z" fill="currentColor"></path>
+                <div>
+                    <p>{{ post.votes }}</p>
+                </div>
+                <svg>
+                  <path class="vote-down" d="M 0 0 h 36 L 18 15z" fill="currentColor" post-id="{{post.id}}"></path>
                 </svg>
             </span>
         <div class ="post-date">{{ moment(post.timestamp).fromNow() }}</div>

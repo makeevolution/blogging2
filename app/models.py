@@ -352,6 +352,7 @@ class Post(db.Model):
     body_html = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    votes = db.Column(db.Integer, default=0)
     comments: sqlalchemy.orm.Query = db.relationship('Comment',
                                 foreign_keys = [Comment.post_id],
                                 backref = db.backref('post', lazy = 'joined'),

@@ -71,7 +71,9 @@ div.body-no-navbar{
 } 
 
 .vote > *{
-    margin-bottom: 5px
+    margin-bottom: 5px;
+    width: 36px;
+    height: 36px
 }
 .vote-up.on {
     color: #f48024
@@ -79,7 +81,10 @@ div.body-no-navbar{
 .vote-down.on {
     color: #f48024
 }
-
+.vote div p{
+    text-align:center;
+    font-weight: bold;
+}
 .profile-header {
     min-height: 260px;
     margin-left: 280px;

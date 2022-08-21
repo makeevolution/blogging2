@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import current_app, flash, make_response, render_template, request, session, redirect, url_for, abort
+from flask import current_app, flash, jsonify, make_response, render_template, render_template_string, request, session, redirect, url_for, abort
 from flask_login import current_user, login_required
 # the below imports the blueprint called "main" from __init__.py
 from . import main
@@ -294,3 +294,13 @@ def moderate_disable(id):
     db.session.add(comment)
     db.session.commit()
     return redirect(request.referrer or url_for("main.index"))
+
+@main.route("/vote", methods=["GET","PUT"])
+def vote():
+    data = request.json
+    post_id = int(data["id"])
+    post = db.session.query(Post).get(post_id)
+    post.votes = post.votes + data["iter"]
+    db.session.add(post)
+    db.session.commit()
+    return jsonify({"votes":post.votes})
