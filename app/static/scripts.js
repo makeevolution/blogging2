@@ -19,4 +19,11 @@
           navbar.classList.remove("sticky-navbar");
         }
     });
+    $(function(){
+    for (const btn of document.querySelectorAll('.vote')) {
+        btn.addEventListener('click', event => {
+        event.currentTarget.classList.toggle('on');
+        });
+    }
+    })
 })(jQuery);

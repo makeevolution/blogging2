@@ -56,11 +56,19 @@ nav.navbar .navbar-collapse a:hover {
 body {
     background-color: #DAE0E6;
 }
+
 div.body-no-navbar{
     padding-top: 65px
 }
-.profile-thumbnail {
-    position: absolute;
+
+.vote {
+    display: inline-block;
+    cursor: pointer;
+    color: #687074
+} 
+
+.vote.on {
+    color: #f48024
 }
 
 .profile-header {
