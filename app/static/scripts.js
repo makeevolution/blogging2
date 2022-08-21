@@ -20,10 +20,22 @@
         }
     });
     $(function(){
-    for (const btn of document.querySelectorAll('.vote')) {
-        btn.addEventListener('click', event => {
-        event.currentTarget.classList.toggle('on');
+        $('.vote').click(function (event) {
+            if (event.target.classList.contains("vote-up")) {
+                var vote_down = event.currentTarget.querySelector(".vote-down");
+                if ($(vote_down).hasClass("on")){
+                    $(vote_down).removeClass("on")
+                }
+                event.target.classList.toggle("on");
+            }
+            if (event.target.classList.contains("vote-down")) {
+                var vote_up = event.currentTarget.querySelector(".vote-up");
+                if ($(vote_up).hasClass("on")){
+                    $(vote_up).removeClass("on")
+                }
+                // add logic to upvote downvote
+                event.target.classList.toggle("on");
+            }
         });
-    }
     })
 })(jQuery);
