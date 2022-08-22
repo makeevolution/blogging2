@@ -76,6 +76,7 @@ div.index-page-sidebar{
     border-width: 20px;
     border-radius: 20px;
     min-width:300px;
+    max-width:300px;
 }
 
 

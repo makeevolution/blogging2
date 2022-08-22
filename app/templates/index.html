@@ -58,7 +58,6 @@
                 {{ macros.pagination_widget(pagination, 'main.index') }}
             </div>
         </div>
-        <p> The local time is {{moment(current_time).format("LLL")}}</p>
     </div>
     <div class="index-page-sidebar">
         <h3>Hi there!</h3>
@@ -68,6 +67,13 @@
             Flask (i.e. Python) for the back-end, and MySQL for the database.</p>
         <p>The blog allows you to post, comment and vote on others' post. Try it out by making an account.
             A fake email works just fine :). 
+        </p>
+        <p>Future functionalities I'm planning to implement:
+            <ul>
+                <li>Group posts into topics (i.e. sub-reddits)</li>
+                <li>Search functionality for certain posts</li>
+                <li>Any more ideas? Let me know!</li>
+            </ul>
         </p>
         <p> Check out the source code on <a href="#">my github</a>.</p>
         <p> More about me on <a href="http://aldosebastian.pythonanywhere.com">aldosebastian.pythonanywhere.com</a></p>
