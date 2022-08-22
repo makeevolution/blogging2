@@ -7,7 +7,9 @@
 <div class="profile-page">
     <div class="user-posts">
         <h3> {{ user.username }}'s posts</h3>
-        {% include '_posts.html' %}
+        {% with as_list="as_list" %}
+            {% include '_posts.html' %}
+        {% endwith %}    
     </div>
     <div class="profile-sidebar">
         <img class="ïmg-rounded profile-thumbnail" src="{{ user.gravatar(size=256) }}">
@@ -16,7 +18,7 @@
         <p>
             {% if user.name %}{{ user.name }}{% endif %}
             {% if user.location %}
-            from <a href="http://maps.google.com/?q={{ user.location }}">From {{ user.location }}</a>
+            From <a href="http://maps.google.com/?q={{ user.location }}">{{ user.location }}</a>
             {% endif %}
         </p>
         {% endif %}

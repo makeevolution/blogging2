@@ -51,7 +51,7 @@
                 </h3>
             </a>
         </div>
-        <div class="post-body {{ is_index_page }}">
+        <div class="post-body {{ as_list }}">
             {% if post.body_html %}
                 {{ post.body_html | safe }}
             {% else %}

@@ -102,11 +102,15 @@ div.profile-sidebar{
     text-align:center;
     font-weight: bold;
 }
+
 .profile-page{
     display: flex
 }
-.profile-sidebar {
-    min-height: 260px;
+@media (max-width: 900px) {
+    .profile-page{
+        display: flex;
+        flex-direction: column-reverse;
+    }
 }
 
 ul.posts {
@@ -162,12 +166,12 @@ div.post-body {
     position: relative;
 }
 
-div.post-body.is_index_page {
+div.post-body.as_list {
     max-height: 100px;
     overflow: hidden;
 }
 
-div.post-body.is_index_page::before {
+div.post-body.as_list::before {
     content: '';
     width: 100%;
     height: 100%;

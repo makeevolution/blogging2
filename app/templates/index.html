@@ -63,7 +63,7 @@
     </div>
     <!-- Remember that posts and pagination data are already
          synchronized and processed in the route-->
-    {% with is_index_page="is_index_page" %}
+    {% with as_list="as_list" %}
         {% include '_posts.html' %}
      {% endwith %}    
      <div class="pagination">
