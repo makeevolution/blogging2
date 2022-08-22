@@ -61,6 +61,23 @@ div.body-no-navbar{
     padding-top: 65px
 }
 
+div.user-posts{
+    /* The user page has contents as flex. 
+    Set min-width of posts to 0 to prevent content overflow,
+    more explanation here https://stackoverflow.com/questions/36230944/prevent-flex-items-from-overflowing-a-container
+    */
+    min-width: 0;
+}
+div.profile-sidebar{
+    margin-left: 30px;
+    background: white;
+    height: fit-content;
+    border-style: solid;
+    border-color: white;
+    border-width: 20px;
+    border-radius: 20px;
+}
+
 .vote {
     display: inline-block;
     cursor: pointer;
@@ -85,9 +102,11 @@ div.body-no-navbar{
     text-align:center;
     font-weight: bold;
 }
-.profile-header {
+.profile-page{
+    display: flex
+}
+.profile-sidebar {
     min-height: 260px;
-    margin-left: 280px;
 }
 
 ul.posts {
