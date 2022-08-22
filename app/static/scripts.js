@@ -39,20 +39,31 @@
             if ($(otherVote).hasClass("on")) {
                 $(otherVote).removeClass("on")
             }
+
+            var voter_id = $(event.currentTarget).attr("voter-id"); // Can take id from other vote since the clicked and the opposing vote refers to the same post!
+            if (voter_id == ''){
+                swal("Please log in to vote!", {
+							icon: "warning",
+						});
+                        return;
+                    }
             $.ajax({
                     url: '/vote',
                     type: "PUT",
                     contentType: "application/json",
-                    data: JSON.stringify({ "id": post_id, "iter": iter }),
+                    data: JSON.stringify({ "post_id": post_id, "iter": iter, "voter_id": voter_id}),
                     event: event,
                     success: function (result) {
                         this.event.currentTarget.querySelector("div p").textContent = result["votes"] //event.currentTarget returns the span class="vote"
                     },
                     error: function (result) {
-                        alert("Vote cast failed! Something went wrong")
+                        swal("Vote cast failed! Something went wrong.", {
+							icon: "warning",
+						});
+                        return;
                     }
                 });
-                current_target_most_specific.classList.add("on");
-        });
+                current_target_most_specific.classList.toggle("on");
+            });
         });
 })(jQuery);
