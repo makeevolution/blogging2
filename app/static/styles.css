@@ -61,14 +61,13 @@ div.body-no-navbar{
     padding-top: 65px
 }
 
-div.user-posts{
-    /* The user page has contents as flex. 
-    Set min-width of posts to 0 to prevent content overflow,
-    more explanation here https://stackoverflow.com/questions/36230944/prevent-flex-items-from-overflowing-a-container
-    */
-    min-width: 0;
+div.index-page{
+    display: flex
 }
-div.profile-sidebar{
+div.index-page-content{
+    min-width:0
+}
+div.index-page-sidebar{
     margin-left: 30px;
     background: white;
     height: fit-content;
@@ -76,7 +75,9 @@ div.profile-sidebar{
     border-color: white;
     border-width: 20px;
     border-radius: 20px;
+    min-width:300px;
 }
+
 
 .vote {
     display: inline-block;
@@ -135,7 +136,7 @@ div.make-post-form {
 }
 
 div.post-date {
-    float: right;
+    font-weight:lighter;
 }
 
 div.post-author {
@@ -180,6 +181,24 @@ div.post-body.as_list::before {
     top: 0;
     background: linear-gradient(transparent 50px, white);
 }
+
+div.user-posts{
+    /* The user page has contents as flex. 
+    Set min-width of posts to 0 to prevent content overflow,
+    more explanation here https://stackoverflow.com/questions/36230944/prevent-flex-items-from-overflowing-a-container
+    */
+    min-width: 0;
+}
+div.profile-sidebar{
+    margin-left: 30px;
+    background: white;
+    height: fit-content;
+    border-style: solid;
+    border-color: white;
+    border-width: 20px;
+    border-radius: 20px;
+}
+
 
 ul.comments {
     list-style-type: none;

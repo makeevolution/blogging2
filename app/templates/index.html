@@ -1,5 +1,3 @@
-
-
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf%}
 {% import "_macros.html" as macros %}
@@ -11,68 +9,70 @@
 {% endblock %}
 
 {% block page_content%}
-<div class="page-header">
-    <h1>Hello, 
-        {% if current_user.is_authenticated %}
-            {{current_user.username}}
-            <p>Pleased to meet you!</p>
-        {% else %} 
-            Stranger 
-        {%endif%}
-    </h1>
-</div>
+<div class="index-page">
+    <div class="index-page-content">
 
-<div>
-    {% if current_user.can(Permission.WRITE) %}
-    <!--Collapse uses Bootstrap-->
-    <input readOnly type="text" placeholder="Create Post" class="form-control show-post-form" data-toggle="collapse" data-target="#form"/>
-    <div class="make-post-form collapse" id="form" style="position:relative">
-        <form class="form" action="" method="post" role="form">
-            {{ form.csrf_token }}
-            {{ wtf.form_field(form.title) }}
-            {{ wtf.form_field(form.text) }}
-            <div style="display:flex">
-                {{ form.submit(class="btn btn-info") }}
+        <div>
+            {% if current_user.can(Permission.WRITE) %}
+            <!--Collapse uses Bootstrap-->
+            <input readOnly type="text" placeholder="Create Post" class="form-control show-post-form"
+                data-toggle="collapse" data-target="#form" />
+            <div class="make-post-form collapse" id="form" style="position:relative">
+                <form class="form" action="" method="post" role="form">
+                    {{ form.csrf_token }}
+                    {{ wtf.form_field(form.title) }}
+                    {{ wtf.form_field(form.text) }}
+                    <div style="display:flex">
+                        {{ form.submit(class="btn btn-info") }}
+                    </div>
+                </form>
+                <button class="btn btn-danger hide-post-form"
+                    style="position:absolute; margin-top:-34px; margin-left:90px"> Cancel </button>
+
             </div>
-        </form>
-        <button class="btn btn-danger hide-post-form" style="position:absolute; margin-top:-34px; margin-left:90px"> Cancel </button>
+            {% endif %}
+            <h1>Posts</h1>
+            <div class="post-tabs">
+                <ul class="nav nav-pills">
+                    <li{% if not only_following_posts %} class="active" {% endif %}>
+                        <a href="{{ url_for('main.show_all') }}">
+                            All
+                        </a>
+                        </li>
+                        {% if current_user.is_authenticated %}
 
-    </div>
-    {% endif %}
-    <h1>Posts</h1>
-    <div class="post-tabs">
-        <ul class="nav nav-pills">
-            <li{% if not only_following_posts %} class="active"{% endif %}>
-                <a 
-                    href="{{ url_for('main.show_all') }}"
-                    >
-                    All
-                </a>
-            </li>
-            {% if current_user.is_authenticated %}
-
-            <li{% if only_following_posts %} class="active"{% endif %}>
-                <a 
-                    href="{{ url_for('main.show_following') }}"
-                    >
-                    Those You follow
-                </a>
-            </li>
-            {% endif %}    
-        </ul>
-    </div>
-    <!-- Remember that posts and pagination data are already
+                        <li{% if only_following_posts %} class="active" {% endif %}>
+                            <a href="{{ url_for('main.show_following') }}">
+                                Those You follow
+                            </a>
+                            </li>
+                            {% endif %}
+                </ul>
+            </div>
+            <!-- Remember that posts and pagination data are already
          synchronized and processed in the route-->
-    {% with as_list="as_list" %}
-        {% include '_posts.html' %}
-     {% endwith %}    
-     <div class="pagination">
-        {{ macros.pagination_widget(pagination, 'main.index') }}
-    </div> 
+            {% with as_list="as_list" %}
+            {% include '_posts.html' %}
+            {% endwith %}
+            <div class="pagination">
+                {{ macros.pagination_widget(pagination, 'main.index') }}
+            </div>
+        </div>
+        <p> The local time is {{moment(current_time).format("LLL")}}</p>
+    </div>
+    <div class="index-page-sidebar">
+        <h3>Hi there!</h3>
+        <p>This is SmallBlog. 
+            It's a hobby project of mine, 
+            a blogging platform built using JavaScript and JQuery for the front-end, 
+            Flask (i.e. Python) for the back-end, and MySQL for the database.</p>
+        <p>The blog allows you to post, comment and vote on others' post. Try it out by making an account.
+            A fake email works just fine :). 
+        </p>
+        <p> Check out the source code on <a href="#">my github</a>.</p>
+        <p> More about me on <a href="http://aldosebastian.pythonanywhere.com">aldosebastian.pythonanywhere.com</a></p>
+    </div>
 </div>
-<p> The local time is {{moment(current_time).format("LLL")}}</p>
-
-
 {%endblock%}
 
 <!-- Some notes:
