@@ -1,5 +1,48 @@
-Notes
+SmallBlog
 ======
+![](app/static/screenshot-index-page.jpg)
+[View the live project here](http://64.225.68.141:8000/)
+
+# Table of Contents
+1. [Introduction](#introduction)
+2. [Database](#database)
+3. [Features](#features)
+4. [Testing](#testing)
+5. [Deployment](#deployment)
+
+## Introduction
+This is one of my hobby projects, to learn a new framework that is different to what I usually use at work. It is a blogging platform, where users can register, post their thoughts, and interact with each other by commenting and voting on others' posts.
+
+Main programming language used:
+
+  * Python
+  * JavaScript
+  * CSS3
+  * HTML5
+  * SQL
+
+Libraries and Frameworks used:
+  * Flask (for back-end)
+  * Bootstrap 5 (to easily style the whole blog)
+  * SQLAlchemy (ORM to conduct CRUD operations with the database)
+  * jQuery (To help ease client-side data processing)
+  * Alembic (Database migration tool, to help update the database with schema changes (e.g. addition or deletion of a column for a particular table))
+  * Jinja2 (Templating language for Flask to help display backend data to frontend)
+  * Unittest (To test the application automatically)
+
+CI/CD and deployment:
+  * DigitalOcean as the Linux server where the live blog is currently deployed
+  * Docker (To ease deployment of the app)
+  * GitHub Action (To automate testing and deployment of the blog to the server)
+  * Git (Version control)
+  * Gunicorn (A Python WSGI HTTP server used to serve the application in production)
+
+## Database
+
+The database schema is as shown below. SQLite is used as the development and testing database,
+and MYSQL is used in the live blog (i.e. production).
+
+<iframe width="100%" height="500px" style="box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); border-radius:15px;" allowtransparency="true" allowfullscreen="true" scrolling="no" title="Embedded DrawSQL IFrame" frameborder="0" src="https://drawsql.app/teams/aldo/diagrams/blogging/embed"></iframe>[data](https://drawsql.app/teams/aldo/diagrams/blogging/embed)
 - To run, start virtual env, then ```$env:FLASK_APP = "blogging.py"``` and ```flask run```
 - add also ```$env:FLASK_ENV="development"```
 - This branch has a web form created using flask-wtf package
