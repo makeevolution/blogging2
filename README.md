@@ -11,9 +11,9 @@ SmallBlog
 5. [Deployment](#deployment)
 
 ## Introduction
-This is one of my hobby projects, to learn a new framework that is different to what I usually use at work. It is a blogging platform, where users can register, post their thoughts, and interact with each other by commenting and voting on others' posts.
+This is one of my hobby projects, to learn a new framework that is different to what I usually use at work. It is a blogging platform, where users can register, post their thoughts, and interact with each other by following each other, commenting and voting on others' posts.
 
-Main programming language used:
+Main programming languages used:
 
   * Python
   * JavaScript
@@ -33,9 +33,9 @@ Libraries and Frameworks used:
 CI/CD and deployment:
   * DigitalOcean as the Linux server where the live blog is currently deployed
   * Docker (To ease deployment of the app)
-  * GitHub Action (To automate testing and deployment of the blog to the server)
+  * GitHub Action (To automate testing and deployment of the blog to the live server)
   * Git (Version control)
-  * Gunicorn (A Python WSGI HTTP server used to serve the application in production)
+  * Gunicorn (A Python WSGI HTTP server used to serve the application in the live server)
 
 ## Database
 
@@ -49,7 +49,7 @@ Some notes on the database schema:
 * To ensure unique users, the ```users``` table requires unique ```email``` and ```username``` column values.
 * Only password hashes are being stored in the database. Any password input for login are hashed using a particular hash algorithm and the generated value compared against the one stored.
 
-* ```roles``` table allow us to group users into different types; currently they are generic users, moderators and administrators, each with different permissions. These are assigned and processed in ```models.py```.
+* ```roles``` table allow us to group users into different types; currently they are generic users, moderators and administrators, each with different permissions. These are assigned to each user and processed in ```models.py```.
 * ```posts``` and ```comments``` tables have ```title_html``` and ```body_html``` columns. These are filtered inputs of posts and comments to the blog, and the raw input is stored in ```title``` and ```body``` columns respectively. 
 
   The ```_html``` versions are the ones used in rendering the posts and comments to the blog. The filter is needed to avoid any risks of being attacked with ```HTML``` or ```JavaScript``` injection, for example inputs such as ```<script>alert('xss')</script>```, which if used could render dangerous outputs to the blog, such as login forms or buttons that lead to malicious websites. The ```Jinja2``` renderer used, actually already implement their own filters to any values to be rendered. However, since the posts and comments allow markdown input, I have my own filters for extra security.
@@ -92,7 +92,7 @@ Alternatively, you can use Docker to deploy:
  ```
 
  Replace ```yourName``` and ```yourPassword``` in the above commands with your own chosen name and password, this is used to access the database.
- * Create a new folder named ```persisted_data```. Open ```docker-compose.yml``` file, go to ```volumes``` section under ```mysql```, and change ```/home/aldo/bloggingDB/data``` with ```./persisted_data```
+ * Create a new folder named ```persisted_data``` in the folder you previously made. Open ```docker-compose.yml``` file, go to ```volumes``` section under ```mysql```, and change ```/home/aldo/bloggingDB/data``` with ```./persisted_data```
  * Finally, run ```docker-compose up -d``` to start the blog server in the background, open up your browser and go to ```localhost:8000```
  * To stop the blog from running, type ```docker-compose down```
  
