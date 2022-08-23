@@ -1,3 +1,8 @@
+'''This script is used to help developing the blog further. These are meant to be used
+by importing in a flask shell session'''
+from flask import current_app
+from . import db
+from .models import User, Role
 from random import randint
 from sqlalchemy.exc import IntegrityError
 from faker import Faker
@@ -39,3 +44,22 @@ def posts(count=100):
         db.session.add(p)
     db.session.commit()
 
+class InvalidAttributeException(Exception):
+    def __init__(self, message = "Attribute Invalid!"):
+        super(InvalidAttributeException, self).__init__(message)
+        print("")
+
+def getAllUsers():
+    return db.session.query(User).all()
+
+# Resets all users to User role, except admin
+def resetUserRoles():
+    for user in getAllUsers():
+        if user is None:
+            continue
+        if user.email ==  current_app.get("BLOGGING_ADMIN"):
+            user.role = Role.query.filter_by(name="Administrator").first()
+        else:
+            user.role = Role.query.filter_by(default=True).first()
+        db.session.add(user)
+        db.session.commit()

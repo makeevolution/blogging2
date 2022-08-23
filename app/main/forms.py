@@ -57,6 +57,9 @@ class EditProfileAdminForm(FlaskForm):
             raise ValidationError(f"Username {field.data} is already in use!")
 
 class PostForm(FlaskForm):
+    title = StringField('Title',
+                         validators=[DataRequired()])
+
     text = PageDownField('What\'s on your mind?',
                          validators=[DataRequired()],
                          description="Markdown formatting is supported!")

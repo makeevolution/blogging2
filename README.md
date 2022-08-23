@@ -1,47 +1,100 @@
-Notes
+SmallBlog
 ======
-- To run, start virtual env, then ```$env:FLASK_APP = "blogging.py"``` and ```flask run```
-- add also ```$env:FLASK_ENV="development"```
-- This branch has a web form created using flask-wtf package
-- flask-wtf requires the app to have a secret key configured, to prevent against CSRF attacks
-- Each web form is a class, inherits from the class ```FlaskForm```
-- Each element in the web form is a field of the web form class, where the field
-  equals an object inherited from ```wtforms```
-- Use ```validators``` to validate the inputs.
+![](app/static/screenshot-index-page.jpg)
+[View the live project here](http://64.225.68.141:8000/)
 
-- The last request to the index method can be a POST request
-- This can be problematic, since if the user refreshes the page after the POST
-  request is sent (i.e. pressing submit button), the page will ask for confirmation
-  to re-sent the form, which causes duplicate form submission
-- Duplicate form submission is not desired
-- So it is good practice to do a <b>redirection</b>, by using the redirect function
-  to make a get request instead.
-- ```name``` is stored in ```session```, because as soon as the redirect is done, the form data is destroyed.
+# Table of Contents
+1. [Introduction](#introduction)
+2. [Database](#database)
+3. [Features](#features)
+4. [Testing](#testing)
+5. [Deployment](#deployment)
 
-- Use flash() function to flash messages to the user on certain
-  actions done. For example, if a connected client changes their
-  name, we can flash a message telling them they changed their name. This is shown in hello.py.
-- The base.html now also includes code to render the flash message.
+## Introduction
+This is one of my hobby projects, to learn a new framework that is different to what I usually use at work. It is a blogging platform, where users can register, post their thoughts, and interact with each other by following each other, commenting and voting on others' posts.
 
-- In this commit, ```hello.py``` is changed to ```blogging.py```, and the application is refactored and is much neater. Use gitk to see which files changed and comments on it
+Main programming languages used:
 
-- In this commit, a database migration framework is applied (Alembic). 
-- If we create a change to the models in models.py, using this we can update the database accordingly
-- First, add migrate = Migrate(app,db) to blogging.py (shown there). Don't forget to set the ```FLASK_APP``` env variable to ```blogging.py```
-- Since ```blogging.py``` uses a default configuration that works with the database ```data-dev.sqlite```, the migration will apply to that database
-- To initialize the framework in the project, run ```flask db init``` (before doing any changes to models.py!)
-- Then apply changes to the model. For example, in this commit the attribute ```test``` is added to User, which means a new column ```test``` is to be added in the database
-- After adding this change, run ```flask db migrate``` to create a migration script
-- The migrations folder now has a migration script with upgrade() and downgrade() functions, signifying the changes
-- Add the migration script to git, then run ```flask db upgrade``` to upgrade the database
+  * Python
+  * JavaScript
+  * CSS3
+  * HTML5
+  * SQL
 
-- In this commit, user authentication functionality is added
-- Uses ```Flask-Login``` (management of user sessions for logged-in users), ```Werkzeug``` (password hashing and verification) and ```itsdangerous``` (token generation and verification).
-  
-- In this commit, user permission logic is implemented based on the logged in user's role, to limit access to certain routes.
+Libraries and Frameworks used:
+  * Flask (for back-end)
+  * Bootstrap 5 (to easily style the whole blog)
+  * SQLAlchemy (ORM to conduct CRUD operations with the database)
+  * jQuery (To help ease client-side data processing)
+  * Alembic (Database migration tool, to help update the database with schema changes (e.g. addition or deletion of a column for a particular table))
+  * Jinja2 (Templating language for Flask to help display backend data to frontend)
+  * Unittest (To test the application automatically)
 
-- In this commit, the following/follower feature is implemented through a many to many relationship. See comments on the code for how this works.
-- IMPORTANT: When creating this feature, it was found that auto-generated migration scripts fail. This is primarily because the database used (SQLite) has a very limited support for altering existing tables. See https://www.sqlitetutorial.net/sqlite-alter-table/ for more background info.
-- To get around this, methods explained in https://stackoverflow.com/questions/62640576/flask-migrate-valueerror-constraint-must-have-a-name were followed.
-- In summary, a ```render_as_batch=True``` option is added to the Migrate function in the application factory (```__init.py__```) to get more altering table functionality. In addition, constraints such as foreignkey or primarykey are now given names through ```Config.NAMING_CONVENTION``` option in ```config.py```, because Alembic cannot drop constraints that are not named, which fails upgrades or downgrades that do this. This convention has to be passed in to the migration script, see the migration script ```98a6a60f6c4d.py``` on how this is done, and also the stackoverflow link for more background info. This convention has to also be passed to the db metadata; this is already done in the app factory.
+CI/CD and deployment:
+  * DigitalOcean as the Linux server where the live blog is currently deployed
+  * Docker (To ease deployment of the app)
+  * GitHub Action (To automate testing and deployment of the blog to the live server)
+  * Git (Version control)
+  * Gunicorn (A Python WSGI HTTP server used to serve the application in the live server)
 
+## Database
+
+The database schema is as shown below, generated using [drawsql.app](drawsql.app). SQLite is used as the development and testing database,
+and MYSQL is used in the live blog (i.e. production).
+
+![data](app/static/database.JPG)
+
+Some notes on the database schema:
+
+* To ensure unique users, the ```users``` table requires unique ```email``` and ```username``` column values.
+* Only password hashes are being stored in the database. Any password input for login are hashed using a particular hash algorithm and the generated value compared against the one stored.
+
+* ```roles``` table allow us to group users into different types; currently they are generic users, moderators and administrators, each with different permissions. These are assigned to each user and processed in ```models.py```.
+* ```posts``` and ```comments``` tables have ```title_html``` and ```body_html``` columns. These are filtered inputs of posts and comments to the blog, and the raw input is stored in ```title``` and ```body``` columns respectively. 
+
+  The ```_html``` versions are the ones used in rendering the posts and comments to the blog. The filter is needed to avoid any risks of being attacked with ```HTML``` or ```JavaScript``` injection, for example inputs such as ```<script>alert('xss')</script>```, which if used could render dangerous outputs to the blog, such as login forms or buttons that lead to malicious websites. The ```Jinja2``` renderer used, actually already implement their own filters to any values to be rendered. However, since the posts and comments allow markdown input, I have my own filters for extra security.
+* The ```follows``` and ```votes``` tables are association tables. ```follows``` table cover the many-to-many relationship between ```users``` and ```users``` table. ```votes``` table cover the one-to-many relationship between ```users``` and ```votes```, and many-to-one between ```votes``` and ```posts```. These represent the fact that one user can follow and be followed by multiple users, and that a user can vote for multiple posts and that a post can have multiple votes.
+
+  The ```follower_id``` and ```following_id``` are foreign keys of the ```follows``` association table, and ```voter_id``` and ```post_id``` are foreign keys for the ```votes``` association table.
+
+* Validation of input (e.g. email has to be of format a@email.com) is done at the server-side, using Python packages such as ```flask-form```.
+* No index column is made on any of the tables, I'll add this in the future to speed up queries.
+
+## Deployment
+### Local machine
+To deploy the project in your own system:
+* Download ```Python 3.9.5``` or higher to your system, and ```sqlite3``` for the database
+* Fork this repository, open up a terminal session, and navigate to the forked repository
+* Create a virtual environment (recommended) using ```python -m venv venvYourName```
+* Install all Python requirements using ```python -m pip install -r requirements/common.txt```
+* Create an environment variable in the terminal ```FLASK_APP``` with value ```blogging.py```, and
+```SECRET_KEY``` with a hard to guess string as its value; you can create one here [https://randomkeygen.com/](https://randomkeygen.com/)
+* Run the command ```flask run``` in the terminal, and navigate to ```localhost:5000``` in your browser. A database ```data-dev.sqlite``` will automatically be created and used by your system.
+
+### Docker
+Alternatively, you can use Docker to deploy:
+ * Download and install [docker](https://docs.docker.com/compose/install/compose-desktop/) in your system
+ * Create a new folder in your file system, and copy the file ```docker-compose.yml``` and ```Dockerfile``` from this repository to that folder. Then, download the docker image for this blog by running ```docker pull aldosebastian/blogging```
+ * Create a new file in the folder you created called ```.env-blogging``` with the following data:
+ ```
+  FLASK_APP=blogging.py
+  FLASK_CONFIG=docker
+  SECRET_KEY=a hard to guess string as its value; you can create one from https://randomkeygen.com/
+  DATABASE_URL=mysql+pymysql://yourName:yourPassword@mysql-server/blogging
+ ```
+  and a new file ```.env-mysql``` with the data:
+
+ ```
+ MYSQL_RANDOM_ROOT_PASSWORD=yes
+ MYSQL_DATABASE=blogging
+ MYSQL_USER=yourName
+ MYSQL_PASSWORD=yourPassword
+ ```
+
+ Replace ```yourName``` and ```yourPassword``` in the above commands with your own chosen name and password, this is used to access the database.
+ * Create a new folder named ```persisted_data``` in the folder you previously made. Open ```docker-compose.yml``` file, go to ```volumes``` section under ```mysql```, and change ```/home/aldo/bloggingDB/data``` with ```./persisted_data```
+ * Finally, run ```docker-compose up -d``` to start the blog server in the background, open up your browser and go to ```localhost:8000```
+ * To stop the blog from running, type ```docker-compose down```
+ 
+ ## Testing
+The folder ```tests``` contains unit tests for the application. To run all the tests, simply run ```flask test```

@@ -1,63 +1,239 @@
-.profile-thumbnail {
-    position: absolute;
+h1 {
+    font-family: Courier New, Courier, Lucida Sans Typewriter, Lucida Typewriter, monospace;
+    font-size: 30px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 700;
+    line-height: 33px;
 }
-.profile-header {
-    min-height: 260px;
-    margin-left: 280px;
+
+h3 {
+    font-family: Courier New, Courier, Lucida Sans Typewriter, Lucida Typewriter, monospace;
+    font-size: 14px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 700;
+    line-height: 15.4px;
 }
+
+body {
+    font-family: Courier New, Courier, Lucida Sans Typewriter, Lucida Typewriter, monospace;
+    font-size: 14px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 500;
+    line-height: 20px;
+}
+
+nav.navbar {
+    background-color: white;
+    border-color: #DAE0E6;
+    -webkit-box-shadow: 0 8px 6px -6px #999;
+    -moz-box-shadow: 0 8px 6px -6px #999;
+    box-shadow: 0 8px 6px -6px #999;
+
+}
+
+nav.navbar .navbar-header a,
+nav.navbar .navbar-header a:hover {
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+}
+
+nav.navbar .navbar-collapse ul li a,
+nav.navbar .navbar-collapse a:hover {
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+}
+
+/* The sticky class for navbar to stay sticky when scrolled */
+.sticky-navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+body {
+    background-color: #DAE0E6;
+}
+
+div.body-no-navbar{
+    padding-top: 65px
+}
+
+div.index-page{
+    display: flex
+}
+div.index-page-content{
+    min-width:0
+}
+div.index-page-sidebar{
+    margin-left: 30px;
+    background: white;
+    height: fit-content;
+    border-style: solid;
+    border-color: white;
+    border-width: 20px;
+    border-radius: 20px;
+    min-width:300px;
+    max-width:300px;
+}
+
+
+.vote {
+    display: inline-block;
+    cursor: pointer;
+    color: #687074;
+    display:flex;
+    flex-direction: column;
+    position:absolute
+} 
+
+.vote > *{
+    margin-bottom: 5px;
+    width: 36px;
+    height: 36px
+}
+.vote-up.on {
+    color: #f48024
+}
+.vote-down.on {
+    color: #f48024
+}
+.vote div p{
+    text-align:center;
+    font-weight: bold;
+}
+
+.profile-page{
+    display: flex
+}
+@media (max-width: 900px) {
+    .profile-page{
+        display: flex;
+        flex-direction: column-reverse;
+    }
+}
+
 ul.posts {
     list-style-type: none;
     padding: 0px;
     margin: 16px 0px 0px 0px;
     border-top: 1px solid #e0e0e0;
 }
+
 ul.posts li.post {
     padding: 8px;
     border-bottom: 1px solid #e0e0e0;
+    position: relative;
 }
+
 ul.posts li.post:hover {
     background-color: #f0f0f0;
 }
-div.post-date {
-    float: right;
+
+div.make-post-form {
+    margin-top: 5px;
 }
+
+div.post-date {
+    font-weight:lighter;
+}
+
 div.post-author {
     margin-left: 48px;
     min-height: 48px;
     font-weight: bold;
+    display: flex;
+    flex-direction: row;
 }
+
+div.post-author>* {
+    margin-right: 10px;
+
+}
+
 div.post-thumbnail {
     position: absolute;
 }
-div.post-body {
+
+div.post-title {
     margin-left: 48px;
     min-height: 48px;
 }
+
+div.post-body {
+    margin-left: 48px;
+    min-height: 48px;
+    position: relative;
+}
+
+div.post-body.as_list {
+    max-height: 100px;
+    overflow: hidden;
+}
+
+div.post-body.as_list::before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: linear-gradient(transparent 50px, white);
+}
+
+div.user-posts{
+    /* The user page has contents as flex. 
+    Set min-width of posts to 0 to prevent content overflow,
+    more explanation here https://stackoverflow.com/questions/36230944/prevent-flex-items-from-overflowing-a-container
+    */
+    min-width: 0;
+}
+div.profile-sidebar{
+    margin-left: 30px;
+    background: white;
+    height: fit-content;
+    border-style: solid;
+    border-color: white;
+    border-width: 20px;
+    border-radius: 20px;
+}
+
+
 ul.comments {
     list-style-type: none;
     padding: 0px;
     margin: 16px 0px 0px 0px;
     border-top: 1px solid #e0e0e0;
 }
+
 ul.comments li.comment {
     padding: 8px;
     border-bottom: 1px solid #e0e0e0;
 }
+
 ul.comments li.post:comment {
     background-color: #f0f0f0;
 }
+
 div.comment-date {
     float: right;
 }
+
 div.comment-author {
     margin-left: 48px;
     min-height: 48px;
     font-weight: bold;
 }
+
 div.comment-thumbnail {
     position: absolute;
 }
+
 div.comment-body {
     margin-left: 48px;
     min-height: 48px;
 }
+
+.flask-pagedown-input {}

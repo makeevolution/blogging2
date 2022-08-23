@@ -1,18 +1,19 @@
 from datetime import datetime
-from flask import current_app, flash, make_response, render_template, request, session, redirect, url_for, abort
+from flask import current_app, flash, jsonify, make_response, render_template, render_template_string, request, session, redirect, url_for, abort
 from flask_login import current_user, login_required
+from sqlalchemy.exc import SQLAlchemyError, DBAPIError
 # the below imports the blueprint called "main" from __init__.py
 from . import main
 from .forms import EditProfileAdminForm, EditProfileForm, PostForm, CommentForm
 from .. import db
-from ..models import Permission, Role, User, Post, Comment
+from ..models import Permission, Role, User, Post, Comment, Vote
 from ..decorators import admin_required, permission_required
 
 @main.route('/', methods=["GET","POST"])
 def index():
     form = PostForm()
     if current_user.can(Permission.WRITE) and form.validate_on_submit():
-        post = Post(body = form.text.data, author = current_user._get_current_object())
+        post = Post(title = form.title.data, body = form.text.data, author = current_user._get_current_object())
         db.session.add(post)
         db.session.commit()
         return redirect(url_for("main.index"))
@@ -152,10 +153,14 @@ def edit_post(id):
     if (post.author != current_user) and (not current_user.can(Permission.ADMIN)):
         abort(403)
     form = PostForm()
+    newTitle = form.title.data
     newText = form.text.data # Post to be edited is displayed first
     form.text.data = post.body
+    # form.validate_on_submit() will return false if not all DataRequired fields
+    # are filled in! Make sure you add them too when making unit tests.
     if form.validate_on_submit():
         post.body = newText
+        post.title = newTitle
         db.session.add(post)
         db.session.commit()
         return redirect(url_for("main.post", id = post.id))
@@ -292,3 +297,37 @@ def moderate_disable(id):
     db.session.add(comment)
     db.session.commit()
     return redirect(request.referrer or url_for("main.index"))
+
+@main.route("/vote", methods=["GET","PUT"])
+def vote():
+    data = request.json
+    post_id = int(data["post_id"])
+    voter_id = int(data["voter_id"])
+    current_vote = int(data["iter"])
+    if current_vote not in [-1,1]:
+        raise Exception("vote_type is not supported! Is definition changed in javascript side?")
+    current_vote = True if current_vote == 1 else False
+    # If instance of vote exists, and the new vote is opposite of current vote, update the vote type.
+    vote_instance = db.session.query(Vote).filter(post_id == post_id, voter_id == voter_id).all()
+    if len(vote_instance) > 1:
+        raise Exception("something is wrong in vote database! There can't be multiple vote instances for the same post and voter!")
+    if vote_instance:
+        vote_instance = vote_instance[0]
+        if current_vote != vote_instance.vote_type:
+            vote_instance.vote_type = current_vote
+            db.session.add(vote_instance)
+        else:
+            db.session.delete(vote_instance)
+    else:
+        if current_vote:
+            new_vote = Vote(post_id = post_id, voter_id = voter_id, vote_type = True)
+        else:
+            new_vote = Vote(post_id = post_id, voter_id = voter_id, vote_type = False)
+        db.session.add(new_vote)
+    try:
+        db.session.commit()
+    except (SQLAlchemyError, DBAPIError) as e:
+        db.session.rollback()
+        raise Exception("Error in database operation") from e
+    no_of_votes = db.session.query(Post).get_or_404(post_id).net_votes
+    return jsonify({"votes":no_of_votes})

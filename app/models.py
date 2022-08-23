@@ -38,6 +38,15 @@ class Follow(db.Model):
                             primary_key=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
+class Vote(db.Model):
+    __tablename__ = 'votes'
+    voter_id = db.Column(db.Integer, db.ForeignKey('users.id'),
+                            primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'),
+                            primary_key=True)
+    vote_type = db.Column(db.Boolean, unique = False) # True is upvote, False is downvote
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
 # A comment belogns to one user, one user can have multiple comments (one to many)
 # A comment belongs to a post, one post can have multiple comments (one to many) 
 # Thus, a comment instance has 2 foreign and primary keys, one for the user making it and one for the post its in
@@ -112,6 +121,7 @@ class User(UserMixin, db.Model):
     
     # "joined" argument for lazy in backref is explained here https://docs.sqlalchemy.org/en/14/orm/loading_relationships.html#joined-eager-loading
     # Unlike other classes, the backref assignment here has an additional db.backref() so we can apply lazy = "joined" to its query
+    # The lazy = 'joined' is for queries on 'follower' (or 'following') in an instance of Follow class, while lazy = "dynamic" is for 'following' (or 'followers') in an instance of User
     # "Cascade" configures how actions performed on a parent object propagates to related objects
     # The "all, delete-orphan" means to use all default settings for cascade, plus a delete-orphan setting
     # The delete orphan setting is there so the association table (i.e. "follows") will delete the foreignkeys of any users that are deleted/user that unfollow another, instead of doing the default behaviour which is to set
@@ -135,6 +145,12 @@ class User(UserMixin, db.Model):
                                 backref = db.backref('author', lazy = 'joined'),
                                 lazy = 'dynamic',
                                 cascade = 'all, delete-orphan')
+
+    voters: sqlalchemy.orm.Query = db.relationship('Vote',
+                            foreign_keys = [Vote.voter_id],
+                            backref = db.backref('voter', lazy = 'joined'),
+                            lazy = 'dynamic',
+                            cascade = 'all, delete-orphan')
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -346,16 +362,35 @@ class Role(db.Model):
 class Post(db.Model):
     __tablename__ = "posts"
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.Text)
+    title_html = db.Column(db.Text)
     body = db.Column(db.Text)
     body_html = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-
     comments: sqlalchemy.orm.Query = db.relationship('Comment',
                                 foreign_keys = [Comment.post_id],
                                 backref = db.backref('post', lazy = 'joined'),
                                 lazy = 'dynamic',
                                 cascade = 'all, delete-orphan')
+
+    votes: sqlalchemy.orm.Query = db.relationship('Vote',
+                        foreign_keys = [Vote.post_id],
+                        backref = db.backref('post', lazy = 'joined'),
+                        lazy = 'dynamic',
+                        cascade = 'all, delete-orphan')
+
+    @property
+    def upvotes(self):
+        return len(self.votes.filter_by(vote_type = True).all())
+
+    @property
+    def downvotes(self):
+        return len(self.votes.filter_by(vote_type = False).all())
+    
+    @property
+    def net_votes(self):
+        return int(self.upvotes) - int(self.downvotes)
 
     # The markdown input field can be dangerous, attackers can create markdown that generates
     # html code that can attack the server.
@@ -370,13 +405,22 @@ class Post(db.Model):
     # The _posts.html will look if body_html is not empty (should be). If it isn't, then this will be rendered. Otherwise,
     # the raw markdown will be rendered by Jinja to html.
     @staticmethod
-    def on_changed_body(target, value, oldvalue, initiator):
+    def on_changed_body(target, value, old_value, initiator):
         allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
                         'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
                         'h1', 'h2', 'h3', 'p']
         target.body_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
             tags=allowed_tags, strip=True))
+
+    @staticmethod
+    def on_changed_title(target, value, old_value, initiator):
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
+                        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
+                        'h1', 'h2', 'h3', 'p']
+        target.title_html = bleach.linkify(bleach.clean(
+            markdown(value, output_format='html'),
+            tags=allowed_tags, strip=True)).capitalize()
 
     def create_comment(self, author: User, body: str):
         if body == "":
@@ -399,3 +443,4 @@ class Post(db.Model):
 
 
 db.event.listen(Post.body, 'set', Post.on_changed_body)
+db.event.listen(Post.title, 'set', Post.on_changed_title)

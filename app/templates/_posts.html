@@ -1,17 +1,38 @@
 <ul class = "posts">
     {% for post in posts %}
     <li class = "post">
-        <div class="profile-thumbnail">
-            <a href = "{{url_for('main.user', username = post.author.username) }}">
+            <span class="vote" voter-id = "{{current_user.id}}">
+                <svg>
+                  <path class="vote-up" d="M 0 18 h 36 l -18 -15z" fill="currentColor" post-id="{{post.id}}"></path>
+                </svg>
+                <div>
+                    <p>{{ post.net_votes }}</p>
+                </div>
+                <svg>
+                  <path class="vote-down" d="M 0 0 h 36 L 18 15z" fill="currentColor" post-id="{{post.id}}"></path>
+                </svg>
+            </span>
+
+        <div class="post-author">
+            <a href = "{{url_for('main.user', username = post.author.username) }}" style="display: inline-block; width: 40px;">
                 <img class="img-rounded profile-thumbnail"
                      src = "{{post.author.gravatar(size=40)}}">
             </a>
-        </div>
-        <div class ="post-date">{{ moment(post.timestamp).fromNow() }}</div>
-        <div class="post-author">
-            <a href = "{{url_for('main.user', username = post.author.username) }}">
-               {{ post.author.username }}
+            <a href = "{{url_for('main.user', username = post.author.username) }}" style="display: inline-block; width: fit-content;">
+               <p style="/*! bold */font-weight: bold;">{{ post.author.username }}</p>
             </a>
+            <div class="post-date"> Posted {{ moment(post.timestamp).fromNow() }}</div>
+            <div>
+                {% if (post.author == current_user) and (not current_user.can(Permission.ADMIN)) %}
+                    <a href="{{url_for('main.edit_post', id = post.id) }}">
+                        <span class="label label-primary">Edit</span>
+                    </a>
+                {% elif current_user.can(Permission.ADMIN) %}
+                    <a href="{{url_for('main.edit_post', id = post.id) }}">
+                        <span class="label label-danger">Edit [Admin]</span>
+                    </a>
+                {%endif%}
+            </div>
         </div>
         <!-- The following div renders the posts.-->
         <!-- The | safe skips the safety check by Jinja, since body_html is output of markdown that is already
@@ -20,26 +41,23 @@
              this check by Jinja is not needed.-->
         <!-- Otherwise, the post.body, which is in markdown, will be rendered automatically
              to HTML by Jinja, with its own safety checks.-->
-        <div class="post-body">
+        <div class="post-title">
+            <a href = "{{url_for('main.post', id = post.id) }}" style="display: inline; width: 50px;">
+                <h3 style="font-weight: bold;">
+                {% if post.title_html %}
+                    {{ post.title_html | safe }}
+                {% else %}
+                    {{ post.title | capitalize}}
+                {% endif %}
+                </h3>
+            </a>
+        </div>
+        <div class="post-body {{ as_list }}">
             {% if post.body_html %}
                 {{ post.body_html | safe }}
             {% else %}
                 {{ post.body }}
             {% endif %}
-        </div>
-        <div>
-            <a href = "{{url_for('main.post', id = post.id) }}">
-                <span class="label label-default">Permalink</span> 
-            </a>
-            {% if (post.author == current_user) and (not current_user.can(Permission.ADMIN)) %}
-                <a href="{{url_for('main.edit_post', id = post.id) }}">
-                    <span class="label label-primary">Edit</span>
-                </a>
-            {% elif current_user.can(Permission.ADMIN) %}
-                <a href="{{url_for('main.edit_post', id = post.id) }}">
-                    <span class="label label-danger">Edit [Admin]</span>
-                </a>
-            {%endif%}
         </div>
     </li>
     {% endfor %}

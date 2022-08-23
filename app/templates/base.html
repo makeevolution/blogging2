@@ -12,6 +12,9 @@
 
 {% block head %}
 {{ super() }}
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script type="text/javascript" src="static/scripts.js"></script>
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
@@ -19,7 +22,7 @@
 
 
 {% block navbar %}
-<div class="navbar navbar-inverse" role="navigation">
+<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -30,7 +33,7 @@
             </button>
             <a class="navbar-brand" href="/">SmallBlog</a>
         </div>
-        <div class="navbar-collapse collapse">
+        <div class="navbar-collapse collapse ">
             <ul class="nav navbar-nav">
                 <li><a href="/">Home</a></li>
                 {% if current_user.is_authenticated %}
@@ -40,6 +43,9 @@
             <ul class = "nav navbar-nav navbar-right">
                 {% if current_user.can(Permission.MODERATE) %}        
                     <li><a href="{{url_for('main.moderate') }}">Moderate Comments</a></li>
+                {% endif %}
+                {% if not current_user.is_authenticated %}
+                    <li><a href="{{url_for('auth.register')}}">Register Here</a></li>
                 {% endif %}
                 <!-- The current_user is provided by the flask login package in the background-->
                 <!-- The Jinja template invokes _get_user() function of flask login, which checks
@@ -56,11 +62,11 @@
             </ul>
         </div>
     </div>
-</div>
+</nav>
 {% endblock %}
   
 {%block content%}
-<div class="container">
+<div class="container body-no-navbar">
     {%for message in get_flashed_messages()%}
     <div class="alert alert-warning">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
