@@ -93,6 +93,15 @@ div.index-page-sidebar{
     max-width:300px;
 }
 
+div.user-following-features{
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+div.user-following-features > *{
+    width: fit-content;
+    margin: 10px 0 0 0 ;
+}
 
 .vote {
     display: inline-block;
