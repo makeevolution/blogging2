@@ -37,7 +37,7 @@ jobs:
           echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env-blogging
           echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env-blogging
       - name: build the docker image for the blogging service, keep the mysql service intact
-        run: docker-compose build blogging --no-cache
+        run: docker-compose build --no-cache blogging
       - name: Log in to docker hub
         run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Tag image
