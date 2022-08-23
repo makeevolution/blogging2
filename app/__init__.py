@@ -23,7 +23,7 @@ login_manager.login_view = 'auth.login' # Set path to login page
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
-    
+    app.jinja_env.filters['capitalize'] = str.capitalize
     # Initialize the app with configurations for each of the libraries
     config[config_name].init_app(app)
     bootstrap.init_app(app)
