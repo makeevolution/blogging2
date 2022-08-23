@@ -40,8 +40,11 @@ class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
         'sqlite:///'
+    # Disable csrf check at every post request carrying a form
     WTF_CSRF_ENABLED = False
-
+    # Disable csrf check at every post request to the endpoint
+    #https://stackoverflow.com/questions/38624060/flask-disable-csrf-in-unittest
+    WTF_CSRF_METHODS= []
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \

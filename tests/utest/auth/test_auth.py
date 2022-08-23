@@ -54,7 +54,6 @@ class AuthTestCase(unittest.TestCase):
         }, follow_redirects = True)
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.request.path, "/")
-        self.assertTrue("Hello, " in resp.get_data(as_text=True))
 
         # And test logging out
         resp = self.client.get('/auth/logout', follow_redirects = True)

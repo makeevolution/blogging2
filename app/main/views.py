@@ -156,6 +156,8 @@ def edit_post(id):
     newTitle = form.title.data
     newText = form.text.data # Post to be edited is displayed first
     form.text.data = post.body
+    # form.validate_on_submit() will return false if not all DataRequired fields
+    # are filled in! Make sure you add them too when making unit tests.
     if form.validate_on_submit():
         post.body = newText
         post.title = newTitle

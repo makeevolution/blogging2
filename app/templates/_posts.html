@@ -42,7 +42,7 @@
         <!-- Otherwise, the post.body, which is in markdown, will be rendered automatically
              to HTML by Jinja, with its own safety checks.-->
         <div class="post-title">
-            <a href = "{{url_for('main.post', id = post.id) }}" style="display: inline-block; width: 50px;">
+            <a href = "{{url_for('main.post', id = post.id) }}" style="display: inline; width: 50px;">
                 <h3 style="font-weight: bold;">
                 {% if post.title_html %}
                     {{ post.title_html | safe }}

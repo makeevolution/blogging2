@@ -1,23 +1,14 @@
 # This is the entry point to starting the whole app
 
-import os
-import re
-import sys
+import os, re, sys, click
 
-import click
+# Find the current configuration to be used for the system
+usedConfiguration = os.getenv('FLASK_CONFIG') or 'default'
 
-# Coverage output not possible in debug mode, since COV.start() below starts a different
-# thread that actually runs the tests. Check if debug mode is used using sys.gettrace() output.
-
-# When using flask test command (defined below), notice it uses app in its decorator. This
-# means that it requires an app instance to be created before the test can be run. In this
-# app instance, that's where the login_manager, etc. is initialized i.e. is run. When another
-# instance is made (i.e. in setUp of each unit test), this part is not run anymore. The coverage
-# engine won't see any decorators using these login_manager etc. (e.g. @login_required) if we
-# start the engine after the app.create_app() statemenet below, making the coverage report 
-# incorrect.
-
-if (sys.gettrace() is None):
+# Preliminary if statement to turn on test coverage engine, more information in the flask test
+# decorator below.
+COV = None
+if (sys.gettrace() is None and (usedConfiguration in ['testing', 'development', 'default'])):
     import coverage
     # Start the coverage engine. the include option is to limit which code to analyse; otherwise it will also analyse
     # the pip packages!
@@ -41,7 +32,6 @@ from flask_migrate import Migrate, upgrade
 from config import config
 
 # Create an instance of an application using a configuration in env var
-usedConfiguration = os.getenv('FLASK_CONFIG') or 'default'
 app = create_app(usedConfiguration)
 # The below variable is used by '''flask db migrate''' command i.e. when you want to create a migration script
 # after updating the model. 
@@ -56,10 +46,17 @@ def make_shell_context():
     return dict(db=db, User=User, Role=Role, Permission = Permission, Follow=Follow, Post=Post, 
                 GenericUser = GenericUser, ModeratorUser = ModeratorUser, AdminUser = AdminUser)
 
-# Configuration for test coverage report. Need to put it here so that it starts scanning
-# before any imports for the app starts.
-COV = None
+# Coverage output not possible in debug mode, since COV.start() below starts a different
+# thread that actually runs the tests. Check if debug mode is used using sys.gettrace() output.
+# If debug is used, then don't need to turn on the coverage engine.
 
+# When using flask test command (defined below), notice it uses app in its decorator. This
+# means that it requires an app instance to be created before the test can be run. In this
+# app instance, that's where the login_manager, etc. is initialized i.e. is run. When another
+# instance is made (i.e. in setUp of each unit test), this part is not run anymore. The coverage
+# engine won't see any decorators using these login_manager etc. (e.g. @login_required) if we
+# start the engine after the app.create_app() statement below, making the coverage report 
+# incorrect.
 @app.cli.command()
 def test():
     import unittest
@@ -82,13 +79,12 @@ def test():
     
 @app.cli.command()
 def deploy():
-    """Run deployment"""
     # Alembic to migrate the new database to latest version
     upgrade()
-    # Create user roles in the new database
+    # Create user roles in the roles table in the database, if not yet configured
     Role.insert_roles()
 
-# Create a new database based on current model of db
+# My own helper command to update a new sqlite database based on current model of db.
 # Similar to flask db init, but make our own so we don't depend on that framework!
 @app.cli.command("createdatabase")
 @click.argument("dbname", required = True)

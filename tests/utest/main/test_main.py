@@ -7,7 +7,6 @@ from app.factories.user_factory import user_factory
 
 logging.basicConfig( stream=sys.stdout )
 logging.getLogger(__name__).setLevel( logging.DEBUG )
-
 # Helper decorator that logs in a client to an endpoint, returns the client,
 # then logs them out once the test is done. 
 # Using ‘wraps’ helps to presever info about the function being decorated
@@ -123,7 +122,6 @@ class MainTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(self) -> None:
         self.app = create_app('testing')
-        # Get the app context (see page 18 of book for more info)
         self.app_context = self.app.app_context()
         # Make the app accessible by current_app by pushing the app's app_context
         self.app_context.push()
@@ -155,7 +153,7 @@ class MainTestCase(unittest.TestCase):
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, 200)
         #log.debug("testme")
-        self.assertTrue("Stranger" in resp.get_data(as_text=True))
+        self.assertTrue("SmallBlog" in resp.get_data(as_text=True))
 
     @log_in_and_out("genericUser")
     def test_all(self):
@@ -273,14 +271,19 @@ class MainTestCase(unittest.TestCase):
     @log_in_and_out("genericUser") 
     def test_editing_post_success(self):
         resp = self.client.post(f"/edit/1", data = {
+            "title": "newTitle",
             "text": "newBody"
         }, follow_redirects = True)
+        # The title is in lowercase in the raw HTML, but is rendered with the uppercase T through the h3 tag
+        # it is wrapped by
+        self.assertTrue("newtitle" in resp.get_data(as_text = True))
         self.assertTrue("newBody" in resp.get_data(as_text = True))
     
     @post_something("moderatorUser","MyNewPost")
     @log_in_and_out("genericUser")
     def test_editing_post_by_other_valid_user_unauthorized(self):
         resp = self.client.post(f"/edit/1", data = {
+            "title": "newTitle",
             "text": "newBody"
         }, follow_redirects = True)
         self.assertEqual(resp.status_code, 403)
@@ -288,6 +291,7 @@ class MainTestCase(unittest.TestCase):
     @post_something("genericUser","MyNewPost")
     def test_editing_post_by_anonymous_user_unauthorized(self):
         resp = self.client.post(f"/edit/1", data = {
+            "title": "newTitle",
             "text": "newBody"
         }, follow_redirects = True)
         self.assertEqual(resp.status_code, 403)
