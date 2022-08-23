@@ -240,6 +240,14 @@ class User(UserMixin, db.Model):
         return db.session.query(Post)\
                 .join(Follow, Follow.following_id == Post.author_id)\
                 .filter(Follow.follower_id == self.id)
+    
+    @property
+    def upvoted_posts(self):
+        return [vote_instance.post_id for vote_instance in self.voters if vote_instance.voter_id == self.id and vote_instance.vote_type == True]
+
+    @property
+    def downvoted_posts(self):
+        return [vote_instance.post_id for vote_instance in self.voters if vote_instance.voter_id == self.id and vote_instance.vote_type == False]
 
     # The token generators below are used by the API to authenticate a user
     # without a password, since sending passwords at every request is dangerous

@@ -3,13 +3,13 @@
     <li class = "post">
             <span class="vote" voter-id = "{{current_user.id}}">
                 <svg>
-                  <path class="vote-up" d="M 0 18 h 36 l -18 -15z" fill="currentColor" post-id="{{post.id}}"></path>
+                  <path class="vote-up {{'on' if post.id in current_user.upvoted_posts }}" d="M 0 18 h 36 l -18 -15z" fill="currentColor" post-id="{{post.id}}"></path>
                 </svg>
                 <div>
                     <p>{{ post.net_votes }}</p>
                 </div>
                 <svg>
-                  <path class="vote-down" d="M 0 0 h 36 L 18 15z" fill="currentColor" post-id="{{post.id}}"></path>
+                  <path class="vote-down {{'on' if post.id in current_user.downvoted_posts }}" d="M 0 0 h 36 L 18 15z" fill="currentColor" post-id="{{post.id}}"></path>
                 </svg>
             </span>
 
