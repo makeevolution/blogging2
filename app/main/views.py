@@ -1,6 +1,7 @@
 from datetime import datetime
 from flask import current_app, flash, jsonify, make_response, render_template, render_template_string, request, session, redirect, url_for, abort
 from flask_login import current_user, login_required
+from sqlalchemy import and_
 from sqlalchemy.exc import SQLAlchemyError, DBAPIError
 # the below imports the blueprint called "main" from __init__.py
 from . import main
@@ -308,7 +309,7 @@ def vote():
         raise Exception("vote_type is not supported! Is definition changed in javascript side?")
     current_vote = True if current_vote == 1 else False
     # If instance of vote exists, and the new vote is opposite of current vote, update the vote type.
-    vote_instance = db.session.query(Vote).filter(post_id == post_id, voter_id == voter_id).all()
+    vote_instance = db.session.query(Vote).filter(and_(Vote.post_id == post_id, Vote.voter_id == voter_id)).all()
     if len(vote_instance) > 1:
         raise Exception("something is wrong in vote database! There can't be multiple vote instances for the same post and voter!")
     if vote_instance:

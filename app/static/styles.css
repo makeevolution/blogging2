@@ -77,7 +77,8 @@ div.index-page{
 }
 
 div.index-page-content{
-    flex-grow:2
+    flex-grow:2;
+    overflow: hidden;
 }
 
 div.index-page-sidebar{
