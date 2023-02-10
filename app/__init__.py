@@ -4,6 +4,8 @@ from flask_mail import Mail
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
+from werkzeug.middleware.proxy_fix import ProxyFix
+
 from config import config, Config
 from flask_login import LoginManager
 from flask_pagedown import PageDown
@@ -20,9 +22,11 @@ login_manager.login_view = 'auth.login' # Set path to login page
                                         # if user attempts to access protected page
 
 # create_app is an application factory, creating an instance of the app based on an input configuration
+
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_prefix=1)
     app.jinja_env.filters['capitalize'] = str.capitalize
     # Initialize the app with configurations for each of the libraries
     config[config_name].init_app(app)
