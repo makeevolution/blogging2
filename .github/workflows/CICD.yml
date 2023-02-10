@@ -17,8 +17,8 @@ jobs:
           sudo apt -y install  python3-wheel vim
           export FLASK_APP=blogging.py
           export FLASK_CONFIG=testing
-          python3.9 -m pip install -r requirements/common.txt
-          python3.9 -m flask test
+          python3 -m pip install -r requirements/common.txt
+          python3 -m flask test
 
   build_container_and_push_to_docker_hub_registry:
     runs-on: ubuntu-latest
