@@ -41,3 +41,4 @@ venvROG/
 
 # general
 tmp*
+.idea/*
