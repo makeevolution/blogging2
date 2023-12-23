@@ -1,7 +1,7 @@
 SmallBlog
 ======
 ![](app/static/screenshot-index-page.jpg)
-[View the live project here](http://64.225.68.141:8000/)
+[View the live project here](https://aldosebastian.com/smallblog/)
 
 # Table of Contents
 1. [Introduction](#introduction)
@@ -74,7 +74,7 @@ To deploy the project in your own system:
 ### Docker
 Alternatively, you can use Docker to deploy:
  * Download and install [docker](https://docs.docker.com/compose/install/compose-desktop/) in your system
- * Create a new folder in your file system, and copy the file ```docker-compose.yml``` and ```Dockerfile``` from this repository to that folder. Then, download the docker image for this blog by running ```docker pull aldosebastian/blogging```
+ * Create a new folder in your file system, and copy the file ```docker-compose.yml``` and ```Dockerfile``` from this repository to that folder, and then do `docker-compose build .`. Alternatively instead of local build, download the docker image for this blog by running ```docker pull aldosebastian/blogging``` (login to your Dockerhub account first).
  * Create a new file in the folder you created called ```.env-blogging``` with the following data:
  ```
   FLASK_APP=blogging.py
@@ -92,7 +92,7 @@ Alternatively, you can use Docker to deploy:
  ```
 
  Replace ```yourName``` and ```yourPassword``` in the above commands with your own chosen name and password, this is used to access the database.
- * Create a new folder named ```persisted_data``` in the folder you previously made. Open ```docker-compose.yml``` file, go to ```volumes``` section under ```mysql```, and change ```/home/aldo/bloggingDB/data``` with ```./persisted_data```
+ * Create a new folder named ```persisted_data``` in the folder you previously made. Open ```docker-compose.yml``` file, go to ```volumes``` section under ```mysql```, and change ```/home/aldo/bloggingDB/data``` with ```./persisted_data```. All the data of the app will be inside here.
  * Finally, run ```docker-compose up -d``` to start the blog server in the background, open up your browser and go to ```localhost:8000```
  * To stop the blog from running, type ```docker-compose down```
  
