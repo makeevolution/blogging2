@@ -58,7 +58,7 @@ jobs:
         uses: appleboy/ssh-action@v0.1.3
         with:
           host: ${{ secrets.SSHHOST1 }}
-          username: root
+          username: ${{ secrets.SSHUSERNAME1 }}
           key: ${{ secrets.SSHKEY1}}
           script: |
             # Move to directory where the docker-compose.yml is
