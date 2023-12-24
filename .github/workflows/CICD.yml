@@ -61,8 +61,8 @@ jobs:
           username: ${{ secrets.SSHUSERNAME1 }}
           key: ${{ secrets.SSHKEY1}}
           script: |
-            # Move to directory where the docker-compose.yml is
-            cd /home/aldo/
+            # Move to directory where the relevant docker-compose.yml is
+            cd ~/smallblog/
             # Login to dockerhub registry
             docker login -u aldosebastian -p ${{ secrets.DOCKERHUB_PASSWORD }}
             # Stop and remove any blogging service container
